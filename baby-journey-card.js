@@ -163,6 +163,7 @@ class BabyJourneyCard extends HTMLElement {
     const currentWeek = completedWeeks + 1;
     const progress = Math.min(100, (days / 280) * 100);
     const dueDate = this.addDays(lmp, 280);
+    const daysRemaining = Math.max(0, Math.ceil((dueDate - today) / DAY_MS));
     const offsetState = this._hass.states[this.config.offset_entity];
     const offset = Number(offsetState?.state || 0);
     const minOffset = Number(offsetState?.attributes?.min ?? -40);
@@ -257,10 +258,12 @@ class BabyJourneyCard extends HTMLElement {
             <div class="stat">
               <div class="label">Pregnancy Week</div>
               <div class="value">Week ${currentWeek}</div>
+              <div class="stat-detail">of 40 weeks</div>
             </div>
             <button class="stat due-jump" title="Jump to due-date week">
               <div class="label">Estimated Due Date</div>
               <div class="value">${this.format(dueDate, { day: "2-digit", month: "short", year: "numeric" })}</div>
+              <div class="stat-detail">${daysRemaining} ${daysRemaining === 1 ? "day" : "days"} remaining</div>
             </button>
           </div>
           <div class="settings-row">
@@ -709,7 +712,7 @@ class BabyJourneyCard extends HTMLElement {
       .wrap { --baby-soft:#f48fb1; --baby-secondary:#ab47bc; --baby-primary:#ec407a; --baby-strong:#e91e63; --baby-dark:#ad1457; --baby-dot:#7e57c2; --baby-rgb:233,30,99; container-type:inline-size; padding:18px; color:var(--primary-text-color); background:linear-gradient(145deg,color-mix(in srgb,var(--card-background-color) 74%,var(--baby-soft) 26%),color-mix(in srgb,var(--card-background-color) 86%,var(--baby-secondary) 14%)); border:1px solid color-mix(in srgb,var(--baby-soft) 58%,var(--divider-color)); border-radius:20px; box-shadow:0 10px 30px rgba(var(--baby-rgb),.12); }
       .wrap.theme-blue { --baby-soft:#64b5f6; --baby-secondary:#5c6bc0; --baby-primary:#42a5f5; --baby-strong:#1e88e5; --baby-dark:#1565c0; --baby-dot:#3949ab; --baby-rgb:30,136,229; }
       .summary { display:grid; grid-template-columns:minmax(0,1.35fr) repeat(2,minmax(0,1fr)); gap:10px; }
-      .primary,.stat { position:relative; box-sizing:border-box; padding:14px 15px; min-height:76px; border-radius:15px; color:var(--primary-text-color); text-align:left; background:color-mix(in srgb,var(--card-background-color) 91%,var(--baby-soft) 9%); border:1px solid color-mix(in srgb,var(--baby-soft) 30%,var(--divider-color)); overflow:hidden; }
+      .primary,.stat { position:relative; box-sizing:border-box; padding:14px 15px; min-height:92px; border-radius:15px; color:var(--primary-text-color); text-align:left; background:color-mix(in srgb,var(--card-background-color) 91%,var(--baby-soft) 9%); border:1px solid color-mix(in srgb,var(--baby-soft) 30%,var(--divider-color)); overflow:hidden; }
       .primary { padding-right:48px; }
       .primary::before { content:""; position:absolute; inset:0 auto 0 0; width:var(--progress); background:linear-gradient(90deg,rgba(var(--baby-rgb),.24),color-mix(in srgb,var(--baby-soft) 38%,transparent)); border-right:1px solid rgba(var(--baby-rgb),.32); }
       .primary>* { position:relative; }
@@ -718,11 +721,12 @@ class BabyJourneyCard extends HTMLElement {
       .age span { font-size:.78rem; font-weight:650; letter-spacing:0; color:var(--secondary-text-color); }
       .progress { position:absolute; right:11px; bottom:8px; padding:2px 7px; border-radius:999px; font-size:.66rem; font-weight:800; color:var(--baby-dark); background:rgba(255,255,255,.76); }
       .value { margin-top:8px; font-size:1rem; line-height:1.25; font-weight:750; }
+      .stat-detail { margin-top:4px; color:var(--secondary-text-color); font-size:.74rem; font-weight:600; }
       .due-jump { cursor:pointer; transition:.14s ease; }
       .due-jump:hover { border-color:color-mix(in srgb,var(--baby-secondary) 55%,transparent); box-shadow:0 5px 14px rgba(var(--baby-rgb),.14); }
-      .settings-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:11px; padding:9px 11px; border-radius:12px; background:color-mix(in srgb,var(--card-background-color) 92%,var(--baby-soft) 8%); border:1px solid color-mix(in srgb,var(--baby-soft) 28%,var(--divider-color)); }
+      .settings-row { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); gap:24px; margin-top:11px; padding:13px 18px; border-radius:15px; background:color-mix(in srgb,var(--card-background-color) 91%,var(--baby-soft) 9%); border:1px solid color-mix(in srgb,var(--baby-soft) 30%,var(--divider-color)); }
       .settings-row label { display:flex; justify-content:space-between; align-items:center; gap:12px; font-size:.75rem; color:var(--secondary-text-color); font-weight:700; }
-      .control-chip { display:flex; align-items:center; gap:7px; min-height:34px; padding:0 5px 0 9px; color:var(--primary-text-color); background:color-mix(in srgb,var(--card-background-color) 88%,var(--baby-soft) 12%); border:1px solid color-mix(in srgb,var(--baby-soft) 38%,var(--divider-color)); border-radius:10px; box-shadow:inset 0 1px 0 rgba(255,255,255,.04); }
+      .control-chip { display:flex; align-items:center; gap:7px; min-height:38px; padding:0 7px 0 10px; color:var(--primary-text-color); background:color-mix(in srgb,var(--card-background-color) 86%,var(--baby-soft) 14%); border:1px solid color-mix(in srgb,var(--baby-soft) 44%,var(--divider-color)); border-radius:11px; box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 2px 8px rgba(var(--baby-rgb),.08); }
       .control-chip ha-icon { flex:none; color:var(--baby-primary); --mdc-icon-size:18px; }
       .weekday { min-width:2.5em; color:var(--primary-text-color); font-size:.78rem; text-align:right; }
       .theme-swatch { flex:none; width:16px; height:16px; border-radius:50%; background:linear-gradient(135deg,var(--baby-primary),var(--baby-secondary)); box-shadow:0 0 0 3px rgba(var(--baby-rgb),.12); }
