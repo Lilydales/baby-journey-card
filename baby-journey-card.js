@@ -845,6 +845,8 @@ class BabyJourneyCard extends HTMLElement {
         .weeks { grid-template-columns:repeat(3,minmax(0,1fr)); }
       }
       @container (min-width:900px) {
+        .current-insight { grid-template-columns:auto minmax(280px,1fr) minmax(520px,1.35fr); }
+        .week-facts { grid-template-columns:repeat(4,minmax(0,1fr)); }
         .week:nth-child(n+5) { display:block; }
       }
       @container (max-width:760px) {
