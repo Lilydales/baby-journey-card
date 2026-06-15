@@ -767,7 +767,10 @@ class BabyJourneyCard extends HTMLElement {
       .modal-cancel { color:var(--primary-text-color); background:var(--secondary-background-color); }
       .modal-error { min-height:1em; color:var(--error-color); font-size:.76rem; }
       .error { padding:20px; color:var(--error-color); }
-      @media(max-width:760px) {
+      @media(min-width:1100px) {
+        .weeks { grid-template-columns:repeat(3,minmax(0,1fr)); }
+      }
+      @media(max-width:900px) {
         .journey-layout { grid-template-columns:1fr; }
         .trimester-track { position:static; grid-template-columns:repeat(3,1fr); }
         .rail-title { display:none; }
