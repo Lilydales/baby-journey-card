@@ -675,12 +675,12 @@ class BabyJourneyCard extends HTMLElement {
       .settings-row input,.settings-row select { max-width:150px; padding:6px 8px; color:var(--primary-text-color); color-scheme:light dark; background:var(--card-background-color); border:1px solid var(--divider-color); border-radius:9px; }
       .print-journey { position:absolute; z-index:2; top:9px; right:9px; display:grid; place-items:center; width:30px; height:30px; padding:0; color:#fff; background:linear-gradient(135deg,var(--baby-primary),var(--baby-secondary)); border:0; border-radius:9px; box-shadow:0 3px 9px rgba(var(--baby-rgb),.24); cursor:pointer; }
       .print-journey ha-icon { --mdc-icon-size:18px; }
-      .journey-layout { display:grid; grid-template-columns:112px minmax(0,1fr); gap:12px; align-items:start; margin-top:12px; }
+      .journey-layout { display:grid; gap:10px; margin-top:12px; }
       .journey-main { min-width:0; }
-      .trimester-track { position:sticky; top:12px; display:grid; gap:8px; padding:10px; border-radius:15px; background:color-mix(in srgb,var(--card-background-color) 92%,var(--baby-soft) 8%); border:1px solid color-mix(in srgb,var(--baby-soft) 28%,var(--divider-color)); }
-      .rail-title { padding:1px 2px 5px; color:var(--secondary-text-color); font-size:.62rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+      .trimester-track { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; padding:10px; border-radius:15px; background:color-mix(in srgb,var(--card-background-color) 92%,var(--baby-soft) 8%); border:1px solid color-mix(in srgb,var(--baby-soft) 28%,var(--divider-color)); }
+      .rail-title { display:none; }
       .trimester { position:relative; display:flex; align-items:center; gap:7px; padding:8px 6px; border-radius:11px; opacity:.58; background:color-mix(in srgb,var(--card-background-color) 96%,var(--baby-soft) 4%); border:1px solid transparent; }
-      .trimester:not(:last-child)::after { content:""; position:absolute; left:18px; top:100%; width:2px; height:9px; background:color-mix(in srgb,var(--baby-soft) 45%,var(--divider-color)); }
+      .trimester:not(:last-child)::after { content:""; position:absolute; left:100%; top:50%; width:9px; height:2px; background:color-mix(in srgb,var(--baby-soft) 45%,var(--divider-color)); transform:translateY(-50%); }
       .trimester>span { display:grid; place-items:center; flex:none; width:25px; height:25px; border-radius:50%; color:var(--secondary-text-color); background:var(--secondary-background-color); font-weight:850; }
       .trimester div { display:flex; min-width:0; flex-direction:column; gap:2px; }
       .trimester strong { font-size:.72rem; line-height:1.1; }
@@ -770,12 +770,7 @@ class BabyJourneyCard extends HTMLElement {
       @media(min-width:1100px) {
         .weeks { grid-template-columns:repeat(3,minmax(0,1fr)); }
       }
-      @media(max-width:900px) {
-        .journey-layout { grid-template-columns:1fr; }
-        .trimester-track { position:static; grid-template-columns:repeat(3,1fr); }
-        .rail-title { display:none; }
-        .trimester:not(:last-child)::after { display:none; }
-      }
+      @media(max-width:900px) { .trimester:not(:last-child)::after { display:none; } }
       @media(max-width:650px) { .summary { grid-template-columns:1fr 1fr; } .primary { grid-column:1/-1; } .weeks { grid-template-columns:1fr; } .settings-row,.modal-grid { grid-template-columns:1fr; } }
     `;
   }
