@@ -48,7 +48,8 @@ class BabyJourneyCard extends HTMLElement {
   setConfig(config) {
     if (!config.lmp_entity) throw new Error("Baby Journey Card requires lmp_entity");
     this.config = {
-      weeks_visible: 4,
+      weeks_visible_min: 4,
+      weeks_visible_max: 6,
       max_week: 41,
       offset_entity: "input_number.baby_calendar_week_offset",
       calendar_entity: "calendar.calendar",
@@ -174,7 +175,11 @@ class BabyJourneyCard extends HTMLElement {
         <span>${past ? "No past appointments." : "No upcoming appointments."}</span>
       </div>`;
 
-    const weeks = Array.from({ length: this.config.weeks_visible }, (_, index) => {
+    const weeksVisible = Math.max(
+      this.config.weeks_visible_min,
+      this.config.weeks_visible_max
+    );
+    const weeks = Array.from({ length: weeksVisible }, (_, index) => {
       const shownOffset = offset + index - 1;
       const start = this.addDays(lmp, (completedWeeks + shownOffset) * 7);
       const weekNumber = currentWeek + shownOffset;
@@ -658,7 +663,7 @@ class BabyJourneyCard extends HTMLElement {
       :host { display:block; }
       ha-card { border-radius:20px; overflow:hidden; }
       button,input { font:inherit; }
-      .wrap { --baby-soft:#f48fb1; --baby-secondary:#ab47bc; --baby-primary:#ec407a; --baby-strong:#e91e63; --baby-dark:#ad1457; --baby-dot:#7e57c2; --baby-rgb:233,30,99; padding:18px; color:var(--primary-text-color); background:linear-gradient(145deg,color-mix(in srgb,var(--card-background-color) 74%,var(--baby-soft) 26%),color-mix(in srgb,var(--card-background-color) 86%,var(--baby-secondary) 14%)); border:1px solid color-mix(in srgb,var(--baby-soft) 58%,var(--divider-color)); border-radius:20px; box-shadow:0 10px 30px rgba(var(--baby-rgb),.12); }
+      .wrap { --baby-soft:#f48fb1; --baby-secondary:#ab47bc; --baby-primary:#ec407a; --baby-strong:#e91e63; --baby-dark:#ad1457; --baby-dot:#7e57c2; --baby-rgb:233,30,99; container-type:inline-size; padding:18px; color:var(--primary-text-color); background:linear-gradient(145deg,color-mix(in srgb,var(--card-background-color) 74%,var(--baby-soft) 26%),color-mix(in srgb,var(--card-background-color) 86%,var(--baby-secondary) 14%)); border:1px solid color-mix(in srgb,var(--baby-soft) 58%,var(--divider-color)); border-radius:20px; box-shadow:0 10px 30px rgba(var(--baby-rgb),.12); }
       .wrap.theme-blue { --baby-soft:#64b5f6; --baby-secondary:#5c6bc0; --baby-primary:#42a5f5; --baby-strong:#1e88e5; --baby-dark:#1565c0; --baby-dot:#3949ab; --baby-rgb:30,136,229; }
       .summary { display:grid; grid-template-columns:minmax(0,1.35fr) repeat(2,minmax(0,1fr)); gap:10px; }
       .primary,.stat { position:relative; box-sizing:border-box; padding:14px 15px; min-height:76px; border-radius:15px; color:var(--primary-text-color); text-align:left; background:color-mix(in srgb,var(--card-background-color) 91%,var(--baby-soft) 9%); border:1px solid color-mix(in srgb,var(--baby-soft) 30%,var(--divider-color)); overflow:hidden; }
@@ -699,6 +704,7 @@ class BabyJourneyCard extends HTMLElement {
       .nav-btn.selected { color:#fff; background:linear-gradient(135deg,var(--baby-primary),var(--baby-secondary)); border-color:transparent; }
       .nav-btn:disabled { opacity:.35; cursor:not-allowed; }
       .weeks { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:17px; }
+      .week:nth-child(n+5) { display:none; }
       .week { padding:13px; border-radius:15px; background:color-mix(in srgb,var(--card-background-color) 92%,var(--baby-soft) 8%); border:1px solid color-mix(in srgb,var(--divider-color) 72%,var(--baby-soft) 28%); box-shadow:0 3px 12px rgba(35,20,30,.06); }
       .week.current { background:linear-gradient(135deg,color-mix(in srgb,var(--card-background-color) 62%,var(--baby-soft) 38%),color-mix(in srgb,var(--card-background-color) 86%,#ffc107 14%)); border:2px solid var(--baby-soft); }
       .week.due { background:linear-gradient(135deg,color-mix(in srgb,var(--card-background-color) 64%,var(--baby-secondary) 36%),color-mix(in srgb,var(--card-background-color) 84%,#ffd54f 16%)); border:2px solid var(--baby-secondary); }
@@ -771,6 +777,9 @@ class BabyJourneyCard extends HTMLElement {
       .error { padding:20px; color:var(--error-color); }
       @media(min-width:1100px) {
         .weeks { grid-template-columns:repeat(3,minmax(0,1fr)); }
+      }
+      @container (min-width:900px) {
+        .week:nth-child(n+5) { display:block; }
       }
       @media(max-width:900px) { .trimester:not(:last-child)::after { display:none; } }
       @media(max-width:650px) { .summary { grid-template-columns:1fr 1fr; } .primary { grid-column:1/-1; } .weeks { grid-template-columns:1fr; } .settings-row,.modal-grid { grid-template-columns:1fr; } }
