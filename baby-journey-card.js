@@ -361,9 +361,11 @@ class BabyJourneyCard extends HTMLElement {
         </div>
       </ha-card>`;
 
-    this.shadowRoot.querySelector("#lmp-date").addEventListener("change", (event) => {
-      this.shadowRoot.querySelector("#lmp-weekday").textContent = this.weekday(event.target.value);
-      this.setLmp(event.target.value);
+    this.shadowRoot.querySelector("#lmp-date").addEventListener("change", async (event) => {
+      const input = event.target;
+      this.shadowRoot.querySelector("#lmp-weekday").textContent = this.weekday(input.value);
+      await this.setLmp(input.value);
+      input.blur();
     });
     this.shadowRoot.querySelectorAll(".theme-choice").forEach((button) => button.addEventListener("click", (event) => {
       const option = event.currentTarget.dataset.value;
