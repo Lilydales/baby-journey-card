@@ -4,6 +4,8 @@ A standalone Home Assistant dashboard card for following pregnancy progress,
 weekly development, maternity appointments, and a printable pregnancy
 keepsake.
 
+![Baby Journey Card sample](images/baby-journey-card-sample.jpg)
+
 ## Features
 
 - Gestational age, estimated due date, progress, and current trimester
