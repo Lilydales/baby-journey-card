@@ -896,9 +896,27 @@ class BabyJourneyCard extends HTMLElement {
         .weeks { grid-template-columns:repeat(3,minmax(0,1fr)); }
       }
       @container (min-width:900px) {
+        .eyebrow,.label { font-size:.73rem; }
+        .age { font-size:1.82rem; }
+        .age span,.weekday { font-size:.84rem; }
+        .value { font-size:1.08rem; }
+        .stat-detail,.settings-row label,.setting { font-size:.8rem; }
+        .choice-button { font-size:.77rem; }
+        .trimester strong { font-size:.78rem; }
+        .trimester small { font-size:.64rem; }
         .current-insight { grid-template-columns:auto minmax(280px,1fr) minmax(520px,1.35fr); }
+        .insight-copy>strong { font-size:.95rem; }
+        .insight-copy>span { font-size:.82rem; }
         .week-facts { grid-template-columns:minmax(0,.8fr) minmax(0,.9fr) minmax(0,.8fr) minmax(0,1.5fr); }
+        .week-facts small { font-size:.68rem; }
+        .week-facts strong { font-size:.85rem; }
         .week-facts>div:last-child strong { overflow:visible; text-overflow:clip; white-space:normal; }
+        .nav-btn { font-size:.82rem; }
+        .week-name { font-size:1.06rem; }
+        .week-range { font-size:.84rem; }
+        .day-name,.week-insight { font-size:.74rem; }
+        .appt-subtitle,.appt-meta { font-size:.78rem; }
+        .appt-name { font-size:.95rem; }
         .week:nth-child(n+5) { display:block; }
       }
       @container (max-width:760px) {
