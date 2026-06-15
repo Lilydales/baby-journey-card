@@ -341,6 +341,11 @@ class BabyJourneyCard extends HTMLElement {
       wrap.classList.toggle("theme-pink", option !== "Blue");
       this.setTheme(option);
     });
+    this.shadowRoot.querySelector(".date-control ha-icon").addEventListener("click", () => {
+      const input = this.shadowRoot.querySelector("#lmp-date");
+      if (typeof input.showPicker === "function") input.showPicker();
+      else input.focus();
+    });
     this.shadowRoot.querySelector(".print-journey").addEventListener("click", () =>
       this.openPrintView({ lmp, dueDate, currentWeek, events, theme })
     );
@@ -728,9 +733,14 @@ class BabyJourneyCard extends HTMLElement {
       .settings-row label { display:flex; justify-content:space-between; align-items:center; gap:12px; font-size:.75rem; color:var(--secondary-text-color); font-weight:700; }
       .control-chip { display:flex; align-items:center; gap:7px; min-height:38px; padding:0 7px 0 10px; color:var(--primary-text-color); background:color-mix(in srgb,var(--card-background-color) 86%,var(--baby-soft) 14%); border:1px solid color-mix(in srgb,var(--baby-soft) 44%,var(--divider-color)); border-radius:11px; box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 2px 8px rgba(var(--baby-rgb),.08); }
       .control-chip ha-icon { flex:none; color:var(--baby-primary); --mdc-icon-size:18px; }
+      .date-control ha-icon { cursor:pointer; }
       .weekday { min-width:2.5em; color:var(--primary-text-color); font-size:.78rem; text-align:right; }
       .theme-swatch { flex:none; width:16px; height:16px; border-radius:50%; background:linear-gradient(135deg,var(--baby-primary),var(--baby-secondary)); box-shadow:0 0 0 3px rgba(var(--baby-rgb),.12); }
-      .settings-row input,.settings-row select { max-width:150px; padding:6px 8px; color:var(--primary-text-color); color-scheme:light dark; background:transparent; border:0; border-radius:7px; outline:none; }
+      .settings-row input,.settings-row select { box-sizing:border-box; min-height:30px; max-width:155px; padding:5px 30px 5px 9px; color:var(--primary-text-color); color-scheme:light dark; background:color-mix(in srgb,var(--card-background-color) 94%,var(--baby-soft) 6%); border:1px solid color-mix(in srgb,var(--baby-soft) 30%,var(--divider-color)); border-radius:8px; outline:none; font-weight:700; box-shadow:inset 0 1px 2px rgba(0,0,0,.08); transition:border-color .14s ease,box-shadow .14s ease; }
+      .settings-row input:focus,.settings-row select:focus { border-color:var(--baby-primary); box-shadow:0 0 0 2px rgba(var(--baby-rgb),.18),inset 0 1px 2px rgba(0,0,0,.08); }
+      .settings-row input[type="date"] { padding-right:8px; }
+      .settings-row input[type="date"]::-webkit-calendar-picker-indicator { width:17px; height:17px; margin-left:5px; padding:2px; cursor:pointer; opacity:0; }
+      .settings-row select { appearance:none; -webkit-appearance:none; cursor:pointer; background-image:linear-gradient(45deg,transparent 50%,var(--baby-primary) 50%),linear-gradient(135deg,var(--baby-primary) 50%,transparent 50%); background-position:calc(100% - 14px) 50%,calc(100% - 9px) 50%; background-size:5px 5px,5px 5px; background-repeat:no-repeat; }
       .print-journey { position:absolute; z-index:2; top:9px; right:9px; display:grid; place-items:center; width:30px; height:30px; padding:0; color:#fff; background:linear-gradient(135deg,var(--baby-primary),var(--baby-secondary)); border:0; border-radius:9px; box-shadow:0 3px 9px rgba(var(--baby-rgb),.24); cursor:pointer; }
       .print-journey ha-icon { --mdc-icon-size:18px; }
       .journey-layout { display:grid; gap:10px; margin-top:12px; }
@@ -749,7 +759,7 @@ class BabyJourneyCard extends HTMLElement {
       .current-insight ha-icon { flex:none; color:var(--baby-primary); }
       .insight-copy { display:flex; min-width:0; flex-direction:column; gap:5px; }
       .insight-copy>strong { display:flex; align-items:center; gap:8px; font-size:.88rem; }
-      .insight-copy>strong small { padding:2px 6px; color:var(--baby-dark); background:color-mix(in srgb,#8bc34a 30%,transparent); border-radius:999px; font-size:.58rem; text-transform:uppercase; letter-spacing:.06em; }
+      .insight-copy>strong small { padding:3px 7px; color:#fff; background:#558b2f; border:1px solid rgba(255,255,255,.3); border-radius:999px; box-shadow:0 2px 6px rgba(0,0,0,.18); font-size:.58rem; font-weight:850; line-height:1; text-transform:uppercase; letter-spacing:.06em; }
       .insight-copy>span { color:var(--secondary-text-color); font-size:.76rem; line-height:1.45; }
       .week-facts { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
       .week-facts>div { display:flex; min-width:0; flex-direction:column; gap:4px; padding:9px 10px; border-radius:10px; background:color-mix(in srgb,var(--card-background-color) 94%,var(--baby-soft) 6%); border:1px solid color-mix(in srgb,var(--baby-soft) 24%,var(--divider-color)); }
