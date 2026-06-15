@@ -640,8 +640,10 @@ class BabyJourneyCard extends HTMLElement {
         }
       </script></body></html>`;
     const printUrl = URL.createObjectURL(new Blob([printHtml], { type: "text/html;charset=utf-8" }));
-    const printWindow = window.open(printUrl, "_blank", "noopener");
-    if (!printWindow) {
+    const printWindow = window.open(printUrl, "_blank");
+    if (printWindow) {
+      printWindow.opener = null;
+    } else {
       const link = document.createElement("a");
       link.href = printUrl;
       link.target = "_blank";
