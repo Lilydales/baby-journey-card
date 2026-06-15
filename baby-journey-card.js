@@ -270,12 +270,16 @@ class BabyJourneyCard extends HTMLElement {
           </div>
           <div class="settings-row">
             <label><span>First Day Of Last Period</span><div class="control-chip date-control"><ha-icon icon="mdi:calendar-month-outline"></ha-icon><span id="lmp-weekday" class="weekday">${this.weekday(this.dateKey(lmp))}</span><input id="lmp-date" type="date" value="${this.dateKey(lmp)}"></div></label>
-            <label><span>Color Theme</span><div class="control-chip theme-control"><span class="theme-swatch" aria-hidden="true"></span><select id="theme-select">
-              ${["Pink", "Blue", "Auto"].map((option) => `<option${themeState === option ? " selected" : ""}>${option}</option>`).join("")}
-            </select></div></label>
-            <label><span>Baby Gender</span><div class="control-chip gender-control"><ha-icon icon="mdi:gender-male-female"></ha-icon><select id="gender-select">
-              ${["Unknown", "Girl", "Boy"].map((option) => `<option${genderState === option ? " selected" : ""}>${option}</option>`).join("")}
-            </select></div></label>
+            <div class="setting theme-setting"><span>Color Theme</span><div class="choice-group theme-control" role="group" aria-label="Color Theme">
+              ${["Pink", "Blue", "Auto"].map((option) => `<button type="button" class="choice-button theme-choice${themeState === option ? " active" : ""}" data-value="${option}" aria-pressed="${themeState === option}">${option}</button>`).join("")}
+            </div></div>
+            <div class="setting gender-setting"><span>Baby Gender</span><div class="choice-group gender-control" role="group" aria-label="Baby Gender">
+              ${[
+                ["Unknown", "mdi:help"],
+                ["Girl", "mdi:gender-female"],
+                ["Boy", "mdi:gender-male"],
+              ].map(([option, icon]) => `<button type="button" class="choice-button gender-choice${genderState === option ? " active" : ""}" data-value="${option}" aria-label="${option}" title="${option}" aria-pressed="${genderState === option}"><ha-icon icon="${icon}"></ha-icon><span>${option}</span></button>`).join("")}
+            </div></div>
           </div>
           <div class="journey-layout">
             <aside class="trimester-track" aria-label="Pregnancy trimesters">
@@ -339,16 +343,16 @@ class BabyJourneyCard extends HTMLElement {
       this.shadowRoot.querySelector("#lmp-weekday").textContent = this.weekday(event.target.value);
       this.setLmp(event.target.value);
     });
-    this.shadowRoot.querySelector("#theme-select").addEventListener("change", (event) => {
-      const option = event.target.value;
+    this.shadowRoot.querySelectorAll(".theme-choice").forEach((button) => button.addEventListener("click", (event) => {
+      const option = event.currentTarget.dataset.value;
       const wrap = this.shadowRoot.querySelector(".wrap");
       wrap.classList.toggle("theme-blue", option === "Blue");
       wrap.classList.toggle("theme-pink", option !== "Blue");
       this.setTheme(option);
-    });
-    this.shadowRoot.querySelector("#gender-select").addEventListener("change", (event) =>
-      this.setGender(event.target.value)
-    );
+    }));
+    this.shadowRoot.querySelectorAll(".gender-choice").forEach((button) => button.addEventListener("click", (event) =>
+      this.setGender(event.currentTarget.dataset.value)
+    ));
     this.shadowRoot.querySelector(".date-control ha-icon").addEventListener("click", () => {
       const input = this.shadowRoot.querySelector("#lmp-date");
       if (typeof input.showPicker === "function") input.showPicker();
@@ -357,7 +361,7 @@ class BabyJourneyCard extends HTMLElement {
     this.shadowRoot.querySelector(".print-journey").addEventListener("click", () =>
       this.openPrintView({ lmp, dueDate, currentWeek, events, theme })
     );
-    this.shadowRoot.querySelectorAll(".settings-row input,.settings-row select").forEach((control) =>
+    this.shadowRoot.querySelectorAll(".settings-row input").forEach((control) =>
       control.addEventListener("blur", () => {
         if (this._renderPending) {
           this._renderPending = false;
@@ -745,17 +749,21 @@ class BabyJourneyCard extends HTMLElement {
       .due-jump { cursor:pointer; transition:.14s ease; }
       .due-jump:hover { border-color:color-mix(in srgb,var(--baby-secondary) 55%,transparent); box-shadow:0 5px 14px rgba(var(--baby-rgb),.14); }
       .settings-row { display:grid; grid-template-columns:repeat(3,max-content); justify-content:space-between; gap:20px; margin-top:11px; padding:13px 18px; border-radius:15px; background:color-mix(in srgb,var(--card-background-color) 91%,var(--baby-soft) 9%); border:1px solid color-mix(in srgb,var(--baby-soft) 30%,var(--divider-color)); }
-      .settings-row label { display:grid; grid-template-columns:max-content max-content; justify-content:start; align-items:center; gap:12px; min-width:0; font-size:.75rem; color:var(--secondary-text-color); font-weight:700; }
+      .settings-row label,.setting { display:grid; grid-template-columns:max-content max-content; justify-content:start; align-items:center; gap:12px; min-width:0; font-size:.75rem; color:var(--secondary-text-color); font-weight:700; }
       .control-chip { display:flex; align-items:center; gap:7px; min-height:38px; padding:0 7px 0 10px; color:var(--primary-text-color); background:color-mix(in srgb,var(--card-background-color) 86%,var(--baby-soft) 14%); border:1px solid color-mix(in srgb,var(--baby-soft) 44%,var(--divider-color)); border-radius:11px; box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 2px 8px rgba(var(--baby-rgb),.08); }
       .control-chip:focus-within { border-color:var(--baby-primary); box-shadow:0 0 0 2px rgba(var(--baby-rgb),.18),inset 0 1px 0 rgba(255,255,255,.05); }
       .control-chip ha-icon { flex:none; color:var(--baby-primary); --mdc-icon-size:18px; }
       .date-control ha-icon { cursor:pointer; }
       .weekday { min-width:2.5em; color:var(--primary-text-color); font-size:.78rem; text-align:right; }
-      .theme-swatch { flex:none; width:16px; height:16px; border-radius:50%; background:linear-gradient(135deg,var(--baby-primary),var(--baby-secondary)); box-shadow:0 0 0 3px rgba(var(--baby-rgb),.12); }
       .settings-row input,.settings-row select { box-sizing:border-box; min-height:30px; max-width:155px; padding:5px 30px 5px 5px; color:var(--primary-text-color); color-scheme:light dark; background-color:transparent; border:0; border-radius:0; outline:none; font-weight:700; box-shadow:none; }
       .settings-row input[type="date"] { padding-right:8px; }
       .settings-row input[type="date"]::-webkit-calendar-picker-indicator { width:17px; height:17px; margin-left:5px; padding:2px; cursor:pointer; opacity:0; }
       .settings-row select { appearance:none; -webkit-appearance:none; cursor:pointer; background-image:linear-gradient(45deg,transparent 50%,var(--baby-primary) 50%),linear-gradient(135deg,var(--baby-primary) 50%,transparent 50%); background-position:calc(100% - 14px) 50%,calc(100% - 9px) 50%; background-size:5px 5px,5px 5px; background-repeat:no-repeat; }
+      .choice-group { display:flex; align-items:center; gap:3px; padding:3px; min-height:32px; border-radius:11px; background:color-mix(in srgb,var(--card-background-color) 86%,var(--baby-soft) 14%); border:1px solid color-mix(in srgb,var(--baby-soft) 44%,var(--divider-color)); box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 2px 8px rgba(var(--baby-rgb),.08); }
+      .choice-button { display:flex; align-items:center; justify-content:center; gap:4px; min-height:30px; padding:5px 9px; color:var(--secondary-text-color); background:transparent; border:0; border-radius:8px; font-size:.72rem; font-weight:800; cursor:pointer; }
+      .choice-button:hover { color:var(--primary-text-color); background:color-mix(in srgb,var(--baby-soft) 18%,transparent); }
+      .choice-button.active { color:#fff; background:linear-gradient(135deg,var(--baby-primary),var(--baby-secondary)); box-shadow:0 2px 7px rgba(var(--baby-rgb),.25); }
+      .gender-choice ha-icon { --mdc-icon-size:17px; }
       .print-journey { position:absolute; z-index:2; top:9px; right:9px; display:grid; place-items:center; width:30px; height:30px; padding:0; color:#fff; background:linear-gradient(135deg,var(--baby-primary),var(--baby-secondary)); border:0; border-radius:9px; box-shadow:0 3px 9px rgba(var(--baby-rgb),.24); cursor:pointer; }
       .print-journey ha-icon { --mdc-icon-size:18px; }
       .journey-layout { display:grid; gap:10px; margin-top:12px; }
@@ -869,8 +877,8 @@ class BabyJourneyCard extends HTMLElement {
         .week-facts { grid-column:1/-1; }
       }
       @media(max-width:900px) { .trimester:not(:last-child)::after { display:none; } }
-      @media(max-width:900px) { .settings-row { grid-template-columns:1fr; justify-content:stretch; gap:10px; } .settings-row label { grid-template-columns:minmax(0,1fr) max-content; justify-content:stretch; } }
-      @media(max-width:650px) { .summary { grid-template-columns:1fr 1fr; } .primary { grid-column:1/-1; } .weeks { grid-template-columns:1fr; } .modal-grid { grid-template-columns:1fr; } .settings-row { padding:12px; } .settings-row label { gap:8px; } .settings-row label>span { min-width:0; line-height:1.2; } .control-chip { box-sizing:border-box; width:auto; max-width:188px; } .date-control { gap:4px; padding-left:7px; } .weekday { min-width:2.2em; font-size:.72rem; } .settings-row input[type="date"] { width:118px; padding-left:3px; } .theme-control,.gender-control { min-width:142px; } .settings-row select { width:108px; } }
+      @media(max-width:900px) { .settings-row { grid-template-columns:1fr; justify-content:stretch; gap:10px; } .settings-row label,.setting { grid-template-columns:minmax(0,1fr) max-content; justify-content:stretch; } }
+      @media(max-width:650px) { .summary { grid-template-columns:1fr 1fr; } .primary { grid-column:1/-1; } .weeks { grid-template-columns:1fr; } .modal-grid { grid-template-columns:1fr; } .settings-row { grid-template-columns:minmax(0,1fr) auto; padding:12px; } .settings-row label { grid-column:1/-1; } .settings-row label,.setting { gap:8px; } .settings-row label>span,.setting>span { min-width:0; line-height:1.2; } .control-chip { box-sizing:border-box; width:auto; max-width:188px; } .date-control { gap:4px; padding-left:7px; } .weekday { min-width:2.2em; font-size:.72rem; } .settings-row input[type="date"] { width:118px; padding-left:3px; } .theme-setting { grid-template-columns:minmax(0,1fr) max-content; } .gender-setting { display:flex; } .gender-setting>span { display:none; } .choice-button { padding:5px 7px; } .gender-choice { width:30px; padding:5px; } .gender-choice span { display:none; } }
     `;
   }
 }
