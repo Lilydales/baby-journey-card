@@ -729,15 +729,15 @@ class BabyJourneyCard extends HTMLElement {
       .stat-detail { margin-top:4px; color:var(--secondary-text-color); font-size:.74rem; font-weight:600; }
       .due-jump { cursor:pointer; transition:.14s ease; }
       .due-jump:hover { border-color:color-mix(in srgb,var(--baby-secondary) 55%,transparent); box-shadow:0 5px 14px rgba(var(--baby-rgb),.14); }
-      .settings-row { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); gap:24px; margin-top:11px; padding:13px 18px; border-radius:15px; background:color-mix(in srgb,var(--card-background-color) 91%,var(--baby-soft) 9%); border:1px solid color-mix(in srgb,var(--baby-soft) 30%,var(--divider-color)); }
-      .settings-row label { display:flex; justify-content:space-between; align-items:center; gap:12px; font-size:.75rem; color:var(--secondary-text-color); font-weight:700; }
+      .settings-row { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:28px; margin-top:11px; padding:13px 18px; border-radius:15px; background:color-mix(in srgb,var(--card-background-color) 91%,var(--baby-soft) 9%); border:1px solid color-mix(in srgb,var(--baby-soft) 30%,var(--divider-color)); }
+      .settings-row label { display:grid; grid-template-columns:max-content max-content; justify-content:start; align-items:center; gap:12px; min-width:0; font-size:.75rem; color:var(--secondary-text-color); font-weight:700; }
       .control-chip { display:flex; align-items:center; gap:7px; min-height:38px; padding:0 7px 0 10px; color:var(--primary-text-color); background:color-mix(in srgb,var(--card-background-color) 86%,var(--baby-soft) 14%); border:1px solid color-mix(in srgb,var(--baby-soft) 44%,var(--divider-color)); border-radius:11px; box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 2px 8px rgba(var(--baby-rgb),.08); }
+      .control-chip:focus-within { border-color:var(--baby-primary); box-shadow:0 0 0 2px rgba(var(--baby-rgb),.18),inset 0 1px 0 rgba(255,255,255,.05); }
       .control-chip ha-icon { flex:none; color:var(--baby-primary); --mdc-icon-size:18px; }
       .date-control ha-icon { cursor:pointer; }
       .weekday { min-width:2.5em; color:var(--primary-text-color); font-size:.78rem; text-align:right; }
       .theme-swatch { flex:none; width:16px; height:16px; border-radius:50%; background:linear-gradient(135deg,var(--baby-primary),var(--baby-secondary)); box-shadow:0 0 0 3px rgba(var(--baby-rgb),.12); }
-      .settings-row input,.settings-row select { box-sizing:border-box; min-height:30px; max-width:155px; padding:5px 30px 5px 9px; color:var(--primary-text-color); color-scheme:light dark; background:color-mix(in srgb,var(--card-background-color) 94%,var(--baby-soft) 6%); border:1px solid color-mix(in srgb,var(--baby-soft) 30%,var(--divider-color)); border-radius:8px; outline:none; font-weight:700; box-shadow:inset 0 1px 2px rgba(0,0,0,.08); transition:border-color .14s ease,box-shadow .14s ease; }
-      .settings-row input:focus,.settings-row select:focus { border-color:var(--baby-primary); box-shadow:0 0 0 2px rgba(var(--baby-rgb),.18),inset 0 1px 2px rgba(0,0,0,.08); }
+      .settings-row input,.settings-row select { box-sizing:border-box; min-height:30px; max-width:155px; padding:5px 30px 5px 5px; color:var(--primary-text-color); color-scheme:light dark; background-color:transparent; border:0; border-radius:0; outline:none; font-weight:700; box-shadow:none; }
       .settings-row input[type="date"] { padding-right:8px; }
       .settings-row input[type="date"]::-webkit-calendar-picker-indicator { width:17px; height:17px; margin-left:5px; padding:2px; cursor:pointer; opacity:0; }
       .settings-row select { appearance:none; -webkit-appearance:none; cursor:pointer; background-image:linear-gradient(45deg,transparent 50%,var(--baby-primary) 50%),linear-gradient(135deg,var(--baby-primary) 50%,transparent 50%); background-position:calc(100% - 14px) 50%,calc(100% - 9px) 50%; background-size:5px 5px,5px 5px; background-repeat:no-repeat; }
@@ -854,7 +854,7 @@ class BabyJourneyCard extends HTMLElement {
         .week-facts { grid-column:1/-1; }
       }
       @media(max-width:900px) { .trimester:not(:last-child)::after { display:none; } }
-      @media(max-width:650px) { .summary { grid-template-columns:1fr 1fr; } .primary { grid-column:1/-1; } .weeks { grid-template-columns:1fr; } .settings-row,.modal-grid { grid-template-columns:1fr; } .settings-row { gap:10px; padding:12px; } .settings-row label { display:grid; grid-template-columns:minmax(92px,1fr) auto; align-items:center; gap:8px; } .settings-row label>span { min-width:0; line-height:1.2; } .control-chip { box-sizing:border-box; width:auto; max-width:188px; } .date-control { gap:4px; padding-left:7px; } .weekday { min-width:2.2em; font-size:.72rem; } .settings-row input[type="date"] { width:118px; padding-left:6px; } .theme-control { min-width:142px; } .settings-row select { width:108px; } }
+      @media(max-width:650px) { .summary { grid-template-columns:1fr 1fr; } .primary { grid-column:1/-1; } .weeks { grid-template-columns:1fr; } .settings-row,.modal-grid { grid-template-columns:1fr; } .settings-row { gap:10px; padding:12px; } .settings-row label { grid-template-columns:minmax(0,1fr) max-content; justify-content:stretch; gap:8px; } .settings-row label>span { min-width:0; line-height:1.2; } .control-chip { box-sizing:border-box; width:auto; max-width:188px; } .date-control { gap:4px; padding-left:7px; } .weekday { min-width:2.2em; font-size:.72rem; } .settings-row input[type="date"] { width:118px; padding-left:3px; } .theme-control { min-width:142px; } .settings-row select { width:108px; } }
     `;
   }
 }
