@@ -236,7 +236,7 @@ class BabyJourneyCard extends HTMLElement {
             </button>
           </div>
           <div class="settings-row">
-            <label>First Day Of Last Period<input id="lmp-date" type="date" value="${this.dateKey(lmp)}"></label>
+            <label>First Day Of Last Period<div class="date-control"><span id="lmp-weekday" class="weekday">${this.weekday(this.dateKey(lmp))}</span><input id="lmp-date" type="date" value="${this.dateKey(lmp)}"></div></label>
             <label>Color Theme<select id="theme-select">
               ${["Pink", "Blue", "Auto"].map((option) => `<option${themeState === option ? " selected" : ""}>${option}</option>`).join("")}
             </select></label>
@@ -293,7 +293,10 @@ class BabyJourneyCard extends HTMLElement {
         </div>
       </ha-card>`;
 
-    this.shadowRoot.querySelector("#lmp-date").addEventListener("change", (event) => this.setLmp(event.target.value));
+    this.shadowRoot.querySelector("#lmp-date").addEventListener("change", (event) => {
+      this.shadowRoot.querySelector("#lmp-weekday").textContent = this.weekday(event.target.value);
+      this.setLmp(event.target.value);
+    });
     this.shadowRoot.querySelector("#theme-select").addEventListener("change", (event) => {
       const option = event.target.value;
       const wrap = this.shadowRoot.querySelector(".wrap");
@@ -335,6 +338,12 @@ class BabyJourneyCard extends HTMLElement {
       date,
     });
     await this.setOffset(0);
+  }
+
+  weekday(date) {
+    if (!date) return "";
+    const [year, month, day] = date.split("-").map(Number);
+    return new Intl.DateTimeFormat(undefined, { weekday: "short" }).format(new Date(year, month - 1, day));
   }
 
   setOffset(value) {
@@ -679,6 +688,8 @@ class BabyJourneyCard extends HTMLElement {
       .due-jump:hover { transform:translateY(-1px); border-color:color-mix(in srgb,var(--baby-secondary) 55%,transparent); box-shadow:0 5px 14px rgba(var(--baby-rgb),.14); }
       .settings-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:11px; padding:9px 11px; border-radius:12px; background:color-mix(in srgb,var(--card-background-color) 92%,var(--baby-soft) 8%); border:1px solid color-mix(in srgb,var(--baby-soft) 28%,var(--divider-color)); }
       .settings-row label { display:flex; justify-content:space-between; align-items:center; gap:8px; font-size:.75rem; color:var(--secondary-text-color); font-weight:700; }
+      .date-control { display:flex; align-items:center; gap:7px; }
+      .weekday { min-width:2.5em; color:var(--primary-text-color); font-size:.78rem; text-align:right; }
       .settings-row input,.settings-row select { max-width:150px; padding:6px 8px; color:var(--primary-text-color); color-scheme:light dark; background:var(--card-background-color); border:1px solid var(--divider-color); border-radius:9px; }
       .print-journey { position:absolute; z-index:2; top:9px; right:9px; display:grid; place-items:center; width:30px; height:30px; padding:0; color:#fff; background:linear-gradient(135deg,var(--baby-primary),var(--baby-secondary)); border:0; border-radius:9px; box-shadow:0 3px 9px rgba(var(--baby-rgb),.24); cursor:pointer; }
       .print-journey ha-icon { --mdc-icon-size:18px; }
