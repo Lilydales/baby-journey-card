@@ -44,6 +44,21 @@ const WEEK_INSIGHTS = [
   "Birth through this week can still fall within the recognised term window.",
 ];
 
+const WEEK_FACTS = [
+  { size: "Not yet conceived", heart: "Not applicable", weight: "Not measurable", milestone: "Cycle tracking" },
+  { size: "Microscopic", heart: "Not formed", weight: "Not measurable", milestone: "Ovulation" },
+  { size: "Pinpoint", heart: "Not formed", weight: "Not measurable", milestone: "Implantation" },
+  { size: "<1 mm", heart: "Developing", weight: "<1 g", milestone: "Positive test" },
+  { size: "~2 mm", heart: "Developing", weight: "<1 g", milestone: "Neural tube" },
+  { size: "~3 mm", heart: "~110 bpm", weight: "<1 g", milestone: "Week 8 scan" },
+  { size: "~6 mm", heart: "110-160 bpm", weight: "<1 g", milestone: "Heartbeat visible" },
+  { size: "~13 mm", heart: "Rapid", weight: "~1 g", milestone: "Early scan" },
+  { size: "~23 mm", heart: "Rapid", weight: "~2 g", milestone: "First movements" },
+  { size: "~32 mm", heart: "Rapid", weight: "~4 g", milestone: "Fetal stage" },
+  { size: "~41 mm", heart: "Rapid", weight: "~7 g", milestone: "Screening soon" },
+  { size: "~54 mm", heart: "120-160 bpm", weight: "~14 g", milestone: "12-week scan" },
+];
+
 class BabyJourneyCard extends HTMLElement {
   setConfig(config) {
     if (!config.lmp_entity) throw new Error("Baby Journey Card requires lmp_entity");
@@ -112,6 +127,18 @@ class BabyJourneyCard extends HTMLElement {
     return WEEK_INSIGHTS[Math.max(0, Math.min(WEEK_INSIGHTS.length - 1, week - 1))];
   }
 
+  factsForWeek(week) {
+    if (week <= WEEK_FACTS.length) return WEEK_FACTS[Math.max(0, week - 1)];
+    if (week <= 16) return { size: "7-12 cm", heart: "120-160 bpm", weight: "25-100 g", milestone: "Second trimester" };
+    if (week <= 20) return { size: "13-25 cm", heart: "120-160 bpm", weight: "140-320 g", milestone: "Morphology scan" };
+    if (week <= 24) return { size: "26-32 cm", heart: "110-160 bpm", weight: "360-600 g", milestone: "Movement pattern" };
+    if (week <= 28) return { size: "33-38 cm", heart: "110-160 bpm", weight: "660 g-1 kg", milestone: "Glucose screening" };
+    if (week <= 32) return { size: "39-43 cm", heart: "110-160 bpm", weight: "1.2-1.8 kg", milestone: "Third trimester" };
+    if (week <= 36) return { size: "44-47 cm", heart: "110-160 bpm", weight: "1.9-2.7 kg", milestone: "Birth planning" };
+    if (week <= 40) return { size: "48-51 cm", heart: "110-160 bpm", weight: "2.9-3.6 kg", milestone: "Full term" };
+    return { size: "~51 cm", heart: "110-160 bpm", weight: "~3.6 kg", milestone: "Care-team review" };
+  }
+
   escape(value) {
     return String(value ?? "")
       .replaceAll("&", "&amp;")
@@ -148,6 +175,7 @@ class BabyJourneyCard extends HTMLElement {
     const pastEvents = events.filter((event) => !isUpcoming(event)).reverse();
     const themeState = this._hass.states[this.config.theme_entity]?.state || "Pink";
     const theme = themeState === "Blue" ? "blue" : "pink";
+    const currentFacts = this.factsForWeek(currentWeek);
     const appointmentRows = (items, past = false) => items.length ? items.map((event) => {
       const start = new Date(event.start);
       const timed = String(event.start || "").includes("T");
@@ -236,10 +264,10 @@ class BabyJourneyCard extends HTMLElement {
             </button>
           </div>
           <div class="settings-row">
-            <label>First Day Of Last Period<div class="date-control"><span id="lmp-weekday" class="weekday">${this.weekday(this.dateKey(lmp))}</span><input id="lmp-date" type="date" value="${this.dateKey(lmp)}"></div></label>
-            <label>Color Theme<select id="theme-select">
+            <label><span>First Day Of Last Period</span><div class="control-chip date-control"><ha-icon icon="mdi:calendar-month-outline"></ha-icon><span id="lmp-weekday" class="weekday">${this.weekday(this.dateKey(lmp))}</span><input id="lmp-date" type="date" value="${this.dateKey(lmp)}"></div></label>
+            <label><span>Color Theme</span><div class="control-chip theme-control"><span class="theme-swatch" aria-hidden="true"></span><select id="theme-select">
               ${["Pink", "Blue", "Auto"].map((option) => `<option${themeState === option ? " selected" : ""}>${option}</option>`).join("")}
-            </select></label>
+            </select></div></label>
           </div>
           <div class="journey-layout">
             <aside class="trimester-track" aria-label="Pregnancy trimesters">
@@ -256,7 +284,13 @@ class BabyJourneyCard extends HTMLElement {
             <div class="journey-main">
               <div class="current-insight">
                 <ha-icon icon="mdi:baby-face-outline"></ha-icon>
-                <div><strong>Week ${currentWeek}</strong><span>${this.escape(this.insightForWeek(currentWeek))}</span></div>
+                <div class="insight-copy"><strong>Week ${currentWeek}<small>New</small></strong><span>${this.escape(this.insightForWeek(currentWeek))}</span></div>
+                <div class="week-facts">
+                  <div><small>Baby Size</small><strong>${this.escape(currentFacts.size)}</strong></div>
+                  <div><small>Heart Rate</small><strong>${this.escape(currentFacts.heart)}</strong></div>
+                  <div><small>Weight</small><strong>${this.escape(currentFacts.weight)}</strong></div>
+                  <div><small>Next Milestone</small><strong>${this.escape(currentFacts.milestone)}</strong></div>
+                </div>
               </div>
               <div class="nav">
                 <button class="nav-btn prev" ${offset <= minOffset ? "disabled" : ""} aria-label="Previous week">&#8249;</button>
@@ -687,10 +721,12 @@ class BabyJourneyCard extends HTMLElement {
       .due-jump { cursor:pointer; transition:.14s ease; }
       .due-jump:hover { border-color:color-mix(in srgb,var(--baby-secondary) 55%,transparent); box-shadow:0 5px 14px rgba(var(--baby-rgb),.14); }
       .settings-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:11px; padding:9px 11px; border-radius:12px; background:color-mix(in srgb,var(--card-background-color) 92%,var(--baby-soft) 8%); border:1px solid color-mix(in srgb,var(--baby-soft) 28%,var(--divider-color)); }
-      .settings-row label { display:flex; justify-content:space-between; align-items:center; gap:8px; font-size:.75rem; color:var(--secondary-text-color); font-weight:700; }
-      .date-control { display:flex; align-items:center; gap:7px; }
+      .settings-row label { display:flex; justify-content:space-between; align-items:center; gap:12px; font-size:.75rem; color:var(--secondary-text-color); font-weight:700; }
+      .control-chip { display:flex; align-items:center; gap:7px; min-height:34px; padding:0 5px 0 9px; color:var(--primary-text-color); background:color-mix(in srgb,var(--card-background-color) 88%,var(--baby-soft) 12%); border:1px solid color-mix(in srgb,var(--baby-soft) 38%,var(--divider-color)); border-radius:10px; box-shadow:inset 0 1px 0 rgba(255,255,255,.04); }
+      .control-chip ha-icon { flex:none; color:var(--baby-primary); --mdc-icon-size:18px; }
       .weekday { min-width:2.5em; color:var(--primary-text-color); font-size:.78rem; text-align:right; }
-      .settings-row input,.settings-row select { max-width:150px; padding:6px 8px; color:var(--primary-text-color); color-scheme:light dark; background:var(--card-background-color); border:1px solid var(--divider-color); border-radius:9px; }
+      .theme-swatch { flex:none; width:16px; height:16px; border-radius:50%; background:linear-gradient(135deg,var(--baby-primary),var(--baby-secondary)); box-shadow:0 0 0 3px rgba(var(--baby-rgb),.12); }
+      .settings-row input,.settings-row select { max-width:150px; padding:6px 8px; color:var(--primary-text-color); color-scheme:light dark; background:transparent; border:0; border-radius:7px; outline:none; }
       .print-journey { position:absolute; z-index:2; top:9px; right:9px; display:grid; place-items:center; width:30px; height:30px; padding:0; color:#fff; background:linear-gradient(135deg,var(--baby-primary),var(--baby-secondary)); border:0; border-radius:9px; box-shadow:0 3px 9px rgba(var(--baby-rgb),.24); cursor:pointer; }
       .print-journey ha-icon { --mdc-icon-size:18px; }
       .journey-layout { display:grid; gap:10px; margin-top:12px; }
@@ -705,11 +741,16 @@ class BabyJourneyCard extends HTMLElement {
       .trimester small { color:var(--secondary-text-color); font-size:.59rem; white-space:nowrap; }
       .trimester.active { opacity:1; border-color:var(--baby-soft); background:color-mix(in srgb,var(--card-background-color) 78%,var(--baby-soft) 22%); box-shadow:0 4px 13px rgba(var(--baby-rgb),.13); }
       .trimester.active>span { color:#fff; background:linear-gradient(135deg,var(--baby-primary),var(--baby-secondary)); }
-      .current-insight { display:flex; align-items:flex-start; gap:10px; padding:11px 12px; border-radius:12px; background:color-mix(in srgb,var(--card-background-color) 88%,var(--baby-soft) 12%); border-left:3px solid var(--baby-primary); }
+      .current-insight { display:grid; grid-template-columns:auto minmax(0,1fr) minmax(360px,.95fr); align-items:start; gap:12px; padding:13px 14px; border-radius:12px; background:color-mix(in srgb,var(--card-background-color) 88%,var(--baby-soft) 12%); border-left:3px solid var(--baby-primary); }
       .current-insight ha-icon { flex:none; color:var(--baby-primary); }
-      .current-insight div { display:flex; flex-direction:column; gap:3px; }
-      .current-insight strong { font-size:.78rem; }
-      .current-insight span { color:var(--secondary-text-color); font-size:.74rem; line-height:1.35; }
+      .insight-copy { display:flex; min-width:0; flex-direction:column; gap:5px; }
+      .insight-copy>strong { display:flex; align-items:center; gap:8px; font-size:.88rem; }
+      .insight-copy>strong small { padding:2px 6px; color:var(--baby-dark); background:color-mix(in srgb,#8bc34a 30%,transparent); border-radius:999px; font-size:.58rem; text-transform:uppercase; letter-spacing:.06em; }
+      .insight-copy>span { color:var(--secondary-text-color); font-size:.76rem; line-height:1.45; }
+      .week-facts { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+      .week-facts>div { display:flex; min-width:0; flex-direction:column; gap:4px; padding:9px 10px; border-radius:10px; background:color-mix(in srgb,var(--card-background-color) 94%,var(--baby-soft) 6%); border:1px solid color-mix(in srgb,var(--baby-soft) 24%,var(--divider-color)); }
+      .week-facts small { color:var(--secondary-text-color); font-size:.62rem; }
+      .week-facts strong { overflow:hidden; font-size:.78rem; line-height:1.15; text-overflow:ellipsis; white-space:nowrap; }
       .nav { display:flex; justify-content:center; align-items:center; gap:8px; margin-top:15px; }
       .nav-btn { height:34px; min-width:38px; padding:0 11px; border-radius:11px; color:var(--primary-text-color); background:color-mix(in srgb,var(--card-background-color) 90%,var(--baby-soft) 10%); border:1px solid color-mix(in srgb,var(--baby-soft) 35%,var(--divider-color)); font-size:.76rem; font-weight:750; cursor:pointer; }
       .nav-btn.selected { color:#fff; background:linear-gradient(135deg,var(--baby-primary),var(--baby-secondary)); border-color:transparent; }
@@ -792,8 +833,12 @@ class BabyJourneyCard extends HTMLElement {
       @container (min-width:900px) {
         .week:nth-child(n+5) { display:block; }
       }
+      @container (max-width:760px) {
+        .current-insight { grid-template-columns:auto minmax(0,1fr); }
+        .week-facts { grid-column:1/-1; }
+      }
       @media(max-width:900px) { .trimester:not(:last-child)::after { display:none; } }
-      @media(max-width:650px) { .summary { grid-template-columns:1fr 1fr; } .primary { grid-column:1/-1; } .weeks { grid-template-columns:1fr; } .settings-row,.modal-grid { grid-template-columns:1fr; } }
+      @media(max-width:650px) { .summary { grid-template-columns:1fr 1fr; } .primary { grid-column:1/-1; } .weeks { grid-template-columns:1fr; } .settings-row,.modal-grid { grid-template-columns:1fr; } .settings-row label { align-items:flex-start; flex-direction:column; } .control-chip { box-sizing:border-box; width:100%; } }
     `;
   }
 }
