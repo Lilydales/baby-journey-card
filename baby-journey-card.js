@@ -897,7 +897,8 @@ class BabyJourneyCard extends HTMLElement {
       }
       @container (min-width:900px) {
         .current-insight { grid-template-columns:auto minmax(280px,1fr) minmax(520px,1.35fr); }
-        .week-facts { grid-template-columns:repeat(4,minmax(0,1fr)); }
+        .week-facts { grid-template-columns:minmax(0,.8fr) minmax(0,.9fr) minmax(0,.8fr) minmax(0,1.5fr); }
+        .week-facts>div:last-child strong { overflow:visible; text-overflow:clip; white-space:normal; }
         .week:nth-child(n+5) { display:block; }
       }
       @container (max-width:760px) {
