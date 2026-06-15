@@ -45,18 +45,47 @@ const WEEK_INSIGHTS = [
 ];
 
 const WEEK_FACTS = [
-  { size: "Not yet conceived", heart: "Not applicable", weight: "Not measurable", milestone: "Cycle tracking" },
-  { size: "Microscopic", heart: "Not formed", weight: "Not measurable", milestone: "Ovulation" },
-  { size: "Pinpoint", heart: "Not formed", weight: "Not measurable", milestone: "Implantation" },
-  { size: "<1 mm", heart: "Developing", weight: "<1 g", milestone: "Positive test" },
-  { size: "~2 mm", heart: "Developing", weight: "<1 g", milestone: "Neural tube" },
-  { size: "~3 mm", heart: "~110 bpm", weight: "<1 g", milestone: "Week 8 scan" },
-  { size: "~6 mm", heart: "110-160 bpm", weight: "<1 g", milestone: "Heartbeat visible" },
-  { size: "~13 mm", heart: "Rapid", weight: "~1 g", milestone: "Early scan" },
-  { size: "~23 mm", heart: "Rapid", weight: "~2 g", milestone: "First movements" },
-  { size: "~32 mm", heart: "Rapid", weight: "~4 g", milestone: "Fetal stage" },
-  { size: "~41 mm", heart: "Rapid", weight: "~7 g", milestone: "Screening soon" },
-  { size: "~54 mm", heart: "120-160 bpm", weight: "~14 g", milestone: "12-week scan" },
+  { size: "Not yet conceived", heart: "N/A", weight: "N/A", milestone: "Cycle tracking" },
+  { size: "Microscopic", heart: "Not formed", weight: "N/A", milestone: "Ovulation" },
+  { size: "Pinpoint", heart: "Not formed", weight: "N/A", milestone: "Implantation" },
+  { size: "~1–2 mm", heart: "Forming", weight: "<1 g", milestone: "Neural tube closes" },
+  { size: "~4–5 mm", heart: "Just forming", weight: "<1 g", milestone: "Positive test likely" },
+  { size: "~5–6 mm", heart: "~100–110 bpm", weight: "<1 g", milestone: "Heartbeat detectable" },
+  { size: "~10 mm", heart: "~120–160 bpm", weight: "<1 g", milestone: "Face features forming" },
+  { size: "~16 mm", heart: "~150–170 bpm", weight: "~1 g", milestone: "Fingers forming" },
+  { size: "~23 mm", heart: "~170 bpm", weight: "~2 g", milestone: "Now called a fetus" },
+  { size: "~31 mm", heart: "~170 bpm", weight: "~4 g", milestone: "Organs complete" },
+  { size: "~41 mm", heart: "~150–160 bpm", weight: "~7 g", milestone: "Fingernails forming" },
+  { size: "~54 mm", heart: "~150–160 bpm", weight: "~14 g", milestone: "12-week scan" },
+  { size: "~74 mm", heart: "~150–160 bpm", weight: "~23 g", milestone: "Gender may show" },
+  { size: "~87 mm", heart: "~140–160 bpm", weight: "~43 g", milestone: "Lanugo appears" },
+  { size: "~10 cm", heart: "~140–160 bpm", weight: "~70 g", milestone: "Movements begin" },
+  { size: "~11.6 cm", heart: "~140–160 bpm", weight: "~100 g", milestone: "Week 16 check" },
+  { size: "~13 cm", heart: "~140–160 bpm", weight: "~140 g", milestone: "Skeleton hardening" },
+  { size: "~14.2 cm", heart: "~140–160 bpm", weight: "~190 g", milestone: "Anatomy scan soon" },
+  { size: "~15.3 cm", heart: "~140–160 bpm", weight: "~240 g", milestone: "20-week anatomy scan" },
+  { size: "~16.4 cm", heart: "~140–160 bpm", weight: "~300 g", milestone: "Kicks felt" },
+  { size: "~27.8 cm", heart: "~140–160 bpm", weight: "~360 g", milestone: "Lips, eyebrows visible" },
+  { size: "~28.9 cm", heart: "~130–160 bpm", weight: "~430 g", milestone: "Rapid brain growth" },
+  { size: "~30 cm", heart: "~130–160 bpm", weight: "~500 g", milestone: "Viability threshold" },
+  { size: "~31 cm", heart: "~130–160 bpm", weight: "~600 g", milestone: "Eyes open & close" },
+  { size: "~32.2 cm", heart: "~130–160 bpm", weight: "~760 g", milestone: "Week 24 check" },
+  { size: "~34.6 cm", heart: "~130–150 bpm", weight: "~900 g", milestone: "Brain grows rapidly" },
+  { size: "~35.6 cm", heart: "~130–150 bpm", weight: "~1,000 g", milestone: "Eyes react to light" },
+  { size: "~36.6 cm", heart: "~130–150 bpm", weight: "~1,100 g", milestone: "Week 28 scan" },
+  { size: "~38.6 cm", heart: "~120–150 bpm", weight: "~1,250 g", milestone: "Lungs maturing" },
+  { size: "~39.9 cm", heart: "~120–150 bpm", weight: "~1,500 g", milestone: "Subcutaneous fat forming" },
+  { size: "~41.1 cm", heart: "~120–150 bpm", weight: "~1,700 g", milestone: "Week 30 check" },
+  { size: "~42.4 cm", heart: "~120–150 bpm", weight: "~1,900 g", milestone: "Bones fully developed" },
+  { size: "~43.7 cm", heart: "~120–150 bpm", weight: "~2,100 g", milestone: "Week 32 scan" },
+  { size: "~44.5 cm", heart: "~120–150 bpm", weight: "~2,300 g", milestone: "Practising breathing" },
+  { size: "~45.4 cm", heart: "~120–150 bpm", weight: "~2,500 g", milestone: "Week 34 check" },
+  { size: "~46.2 cm", heart: "~110–160 bpm", weight: "~2,600 g", milestone: "Early term at 37w" },
+  { size: "~47.4 cm", heart: "~110–160 bpm", weight: "~2,800 g", milestone: "Week 36 check" },
+  { size: "~48.3 cm", heart: "~110–160 bpm", weight: "~3,000 g", milestone: "Early term — lungs ready" },
+  { size: "~49.2 cm", heart: "~110–160 bpm", weight: "~3,200 g", milestone: "Full term at 39w" },
+  { size: "~50.1 cm", heart: "~110–160 bpm", weight: "~3,400 g", milestone: "Full term" },
+  { size: "~51 cm", heart: "~110–160 bpm", weight: "~3,600 g", milestone: "Due date! 🎉" },
 ];
 
 class BabyJourneyCard extends HTMLElement {
@@ -129,15 +158,8 @@ class BabyJourneyCard extends HTMLElement {
   }
 
   factsForWeek(week) {
-    if (week <= WEEK_FACTS.length) return WEEK_FACTS[Math.max(0, week - 1)];
-    if (week <= 16) return { size: "7-12 cm", heart: "120-160 bpm", weight: "25-100 g", milestone: "Second trimester" };
-    if (week <= 20) return { size: "13-25 cm", heart: "120-160 bpm", weight: "140-320 g", milestone: "Morphology scan" };
-    if (week <= 24) return { size: "26-32 cm", heart: "110-160 bpm", weight: "360-600 g", milestone: "Movement pattern" };
-    if (week <= 28) return { size: "33-38 cm", heart: "110-160 bpm", weight: "660 g-1 kg", milestone: "Glucose screening" };
-    if (week <= 32) return { size: "39-43 cm", heart: "110-160 bpm", weight: "1.2-1.8 kg", milestone: "Third trimester" };
-    if (week <= 36) return { size: "44-47 cm", heart: "110-160 bpm", weight: "1.9-2.7 kg", milestone: "Birth planning" };
-    if (week <= 40) return { size: "48-51 cm", heart: "110-160 bpm", weight: "2.9-3.6 kg", milestone: "Full term" };
-    return { size: "~51 cm", heart: "110-160 bpm", weight: "~3.6 kg", milestone: "Care-team review" };
+    const index = Math.max(0, Math.min(WEEK_FACTS.length - 1, Math.floor(week)));
+    return WEEK_FACTS[index];
   }
 
   escape(value) {
