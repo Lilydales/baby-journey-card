@@ -69,6 +69,7 @@ class BabyJourneyCard extends HTMLElement {
       offset_entity: "input_number.baby_calendar_week_offset",
       calendar_entity: "calendar.calendar",
       theme_entity: "input_select.baby_journey_theme",
+      gender_entity: "input_select.baby_gender",
       ...config,
     };
     if (!this.shadowRoot) this.attachShadow({ mode: "open" });
@@ -175,6 +176,7 @@ class BabyJourneyCard extends HTMLElement {
     const upcomingEvents = events.filter(isUpcoming);
     const pastEvents = events.filter((event) => !isUpcoming(event)).reverse();
     const themeState = this._hass.states[this.config.theme_entity]?.state || "Pink";
+    const genderState = this._hass.states[this.config.gender_entity]?.state || "Unknown";
     const theme = themeState === "Blue" ? "blue" : "pink";
     const currentFacts = this.factsForWeek(currentWeek);
     const appointmentRows = (items, past = false) => items.length ? items.map((event) => {
@@ -271,6 +273,9 @@ class BabyJourneyCard extends HTMLElement {
             <label><span>Color Theme</span><div class="control-chip theme-control"><span class="theme-swatch" aria-hidden="true"></span><select id="theme-select">
               ${["Pink", "Blue", "Auto"].map((option) => `<option${themeState === option ? " selected" : ""}>${option}</option>`).join("")}
             </select></div></label>
+            <label><span>Baby Gender</span><div class="control-chip gender-control"><ha-icon icon="mdi:gender-male-female"></ha-icon><select id="gender-select">
+              ${["Unknown", "Girl", "Boy"].map((option) => `<option${genderState === option ? " selected" : ""}>${option}</option>`).join("")}
+            </select></div></label>
           </div>
           <div class="journey-layout">
             <aside class="trimester-track" aria-label="Pregnancy trimesters">
@@ -287,7 +292,7 @@ class BabyJourneyCard extends HTMLElement {
             <div class="journey-main">
               <div class="current-insight">
                 <ha-icon icon="mdi:baby-face-outline"></ha-icon>
-                <div class="insight-copy"><strong>Week ${currentWeek}<small>New</small></strong><span>${this.escape(this.insightForWeek(currentWeek))}</span></div>
+                <div class="insight-copy"><strong>Week ${currentWeek}${days % 7 < 3 ? "<small>New</small>" : ""}</strong><span>${this.escape(this.insightForWeek(currentWeek))}</span></div>
                 <div class="week-facts">
                   <div><small>Baby Size</small><strong>${this.escape(currentFacts.size)}</strong></div>
                   <div><small>Heart Rate</small><strong>${this.escape(currentFacts.heart)}</strong></div>
@@ -341,6 +346,9 @@ class BabyJourneyCard extends HTMLElement {
       wrap.classList.toggle("theme-pink", option !== "Blue");
       this.setTheme(option);
     });
+    this.shadowRoot.querySelector("#gender-select").addEventListener("change", (event) =>
+      this.setGender(event.target.value)
+    );
     this.shadowRoot.querySelector(".date-control ha-icon").addEventListener("click", () => {
       const input = this.shadowRoot.querySelector("#lmp-date");
       if (typeof input.showPicker === "function") input.showPicker();
@@ -398,6 +406,13 @@ class BabyJourneyCard extends HTMLElement {
   setTheme(option) {
     return this._hass.callService("input_select", "select_option", {
       entity_id: this.config.theme_entity,
+      option,
+    });
+  }
+
+  setGender(option) {
+    return this._hass.callService("input_select", "select_option", {
+      entity_id: this.config.gender_entity,
       option,
     });
   }
@@ -729,7 +744,7 @@ class BabyJourneyCard extends HTMLElement {
       .stat-detail { margin-top:4px; color:var(--secondary-text-color); font-size:.74rem; font-weight:600; }
       .due-jump { cursor:pointer; transition:.14s ease; }
       .due-jump:hover { border-color:color-mix(in srgb,var(--baby-secondary) 55%,transparent); box-shadow:0 5px 14px rgba(var(--baby-rgb),.14); }
-      .settings-row { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:28px; margin-top:11px; padding:13px 18px; border-radius:15px; background:color-mix(in srgb,var(--card-background-color) 91%,var(--baby-soft) 9%); border:1px solid color-mix(in srgb,var(--baby-soft) 30%,var(--divider-color)); }
+      .settings-row { display:grid; grid-template-columns:repeat(3,max-content); justify-content:space-between; gap:20px; margin-top:11px; padding:13px 18px; border-radius:15px; background:color-mix(in srgb,var(--card-background-color) 91%,var(--baby-soft) 9%); border:1px solid color-mix(in srgb,var(--baby-soft) 30%,var(--divider-color)); }
       .settings-row label { display:grid; grid-template-columns:max-content max-content; justify-content:start; align-items:center; gap:12px; min-width:0; font-size:.75rem; color:var(--secondary-text-color); font-weight:700; }
       .control-chip { display:flex; align-items:center; gap:7px; min-height:38px; padding:0 7px 0 10px; color:var(--primary-text-color); background:color-mix(in srgb,var(--card-background-color) 86%,var(--baby-soft) 14%); border:1px solid color-mix(in srgb,var(--baby-soft) 44%,var(--divider-color)); border-radius:11px; box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 2px 8px rgba(var(--baby-rgb),.08); }
       .control-chip:focus-within { border-color:var(--baby-primary); box-shadow:0 0 0 2px rgba(var(--baby-rgb),.18),inset 0 1px 0 rgba(255,255,255,.05); }
@@ -854,7 +869,8 @@ class BabyJourneyCard extends HTMLElement {
         .week-facts { grid-column:1/-1; }
       }
       @media(max-width:900px) { .trimester:not(:last-child)::after { display:none; } }
-      @media(max-width:650px) { .summary { grid-template-columns:1fr 1fr; } .primary { grid-column:1/-1; } .weeks { grid-template-columns:1fr; } .settings-row,.modal-grid { grid-template-columns:1fr; } .settings-row { gap:10px; padding:12px; } .settings-row label { grid-template-columns:minmax(0,1fr) max-content; justify-content:stretch; gap:8px; } .settings-row label>span { min-width:0; line-height:1.2; } .control-chip { box-sizing:border-box; width:auto; max-width:188px; } .date-control { gap:4px; padding-left:7px; } .weekday { min-width:2.2em; font-size:.72rem; } .settings-row input[type="date"] { width:118px; padding-left:3px; } .theme-control { min-width:142px; } .settings-row select { width:108px; } }
+      @media(max-width:900px) { .settings-row { grid-template-columns:1fr; justify-content:stretch; gap:10px; } .settings-row label { grid-template-columns:minmax(0,1fr) max-content; justify-content:stretch; } }
+      @media(max-width:650px) { .summary { grid-template-columns:1fr 1fr; } .primary { grid-column:1/-1; } .weeks { grid-template-columns:1fr; } .modal-grid { grid-template-columns:1fr; } .settings-row { padding:12px; } .settings-row label { gap:8px; } .settings-row label>span { min-width:0; line-height:1.2; } .control-chip { box-sizing:border-box; width:auto; max-width:188px; } .date-control { gap:4px; padding-left:7px; } .weekday { min-width:2.2em; font-size:.72rem; } .settings-row input[type="date"] { width:118px; padding-left:3px; } .theme-control,.gender-control { min-width:142px; } .settings-row select { width:108px; } }
     `;
   }
 }
