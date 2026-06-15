@@ -685,7 +685,7 @@ class BabyJourneyCard extends HTMLElement {
       .progress { position:absolute; right:11px; bottom:8px; padding:2px 7px; border-radius:999px; font-size:.66rem; font-weight:800; color:var(--baby-dark); background:rgba(255,255,255,.76); }
       .value { margin-top:8px; font-size:1rem; line-height:1.25; font-weight:750; }
       .due-jump { cursor:pointer; transition:.14s ease; }
-      .due-jump:hover { transform:translateY(-1px); border-color:color-mix(in srgb,var(--baby-secondary) 55%,transparent); box-shadow:0 5px 14px rgba(var(--baby-rgb),.14); }
+      .due-jump:hover { border-color:color-mix(in srgb,var(--baby-secondary) 55%,transparent); box-shadow:0 5px 14px rgba(var(--baby-rgb),.14); }
       .settings-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:11px; padding:9px 11px; border-radius:12px; background:color-mix(in srgb,var(--card-background-color) 92%,var(--baby-soft) 8%); border:1px solid color-mix(in srgb,var(--baby-soft) 28%,var(--divider-color)); }
       .settings-row label { display:flex; justify-content:space-between; align-items:center; gap:8px; font-size:.75rem; color:var(--secondary-text-color); font-weight:700; }
       .date-control { display:flex; align-items:center; gap:7px; }
@@ -726,7 +726,7 @@ class BabyJourneyCard extends HTMLElement {
       .day-grid { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); text-align:center; gap:3px; }
       .day-name { font-size:.68rem; color:var(--secondary-text-color); }
       .day-num { position:relative; display:flex; align-items:center; justify-content:center; min-width:28px; height:28px; margin:4px auto 0; padding:0; border:0; border-radius:999px; color:var(--primary-text-color); background:transparent; font-weight:650; cursor:pointer; transition:.14s ease; }
-      .day-num:hover { transform:translateY(-1px) scale(1.08); background:color-mix(in srgb,var(--baby-soft) 18%,transparent); }
+      .day-num:hover { background:color-mix(in srgb,var(--baby-soft) 28%,transparent); box-shadow:0 0 0 2px color-mix(in srgb,var(--baby-secondary) 25%,transparent); }
       .day-num.today { color:#fff; background:var(--baby-strong); box-shadow:0 0 0 3px rgba(var(--baby-rgb),.2),0 0 9px rgba(var(--baby-rgb),.65); }
       .day-num.appointment { box-shadow:inset 0 0 0 2px var(--baby-secondary); }
       .day-num.appointment::after { content:""; position:absolute; right:-1px; top:-1px; width:7px; height:7px; border-radius:50%; background:var(--baby-dot); border:1.5px solid var(--card-background-color); }
@@ -740,7 +740,7 @@ class BabyJourneyCard extends HTMLElement {
       .appt-count { flex:none; padding:3px 8px; border-radius:999px; font-size:.68rem; font-weight:800; color:var(--baby-dark); background:rgba(255,255,255,.72); border:1px solid rgba(var(--baby-rgb),.22); }
       .appt-list { display:grid; gap:8px; }
       .appt-row { display:grid; grid-template-columns:58px minmax(0,1fr); gap:11px; align-items:center; width:100%; padding:11px; color:var(--primary-text-color); text-align:left; border-radius:14px; background:color-mix(in srgb,var(--card-background-color) 91%,var(--baby-soft) 9%); border:1px solid color-mix(in srgb,var(--baby-soft) 28%,var(--divider-color)); cursor:pointer; transition:.14s ease; }
-      .appt-row:hover { transform:translateY(-1px); border-color:color-mix(in srgb,var(--baby-secondary) 55%,transparent); box-shadow:0 5px 14px rgba(var(--baby-rgb),.14); }
+      .appt-row:hover { border-color:color-mix(in srgb,var(--baby-secondary) 55%,transparent); box-shadow:0 5px 14px rgba(var(--baby-rgb),.14); }
       .appt-row.past { opacity:.62; filter:saturate(.55); }
       .past-appointments { margin-top:11px; padding-top:10px; border-top:1px solid var(--divider-color); }
       .past-appointments summary { display:flex; align-items:center; justify-content:space-between; padding:7px 3px; color:var(--secondary-text-color); font-size:.74rem; font-weight:800; cursor:pointer; }
