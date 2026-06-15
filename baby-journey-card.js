@@ -852,7 +852,7 @@ class BabyJourneyCard extends HTMLElement {
         .week-facts { grid-column:1/-1; }
       }
       @media(max-width:900px) { .trimester:not(:last-child)::after { display:none; } }
-      @media(max-width:650px) { .summary { grid-template-columns:1fr 1fr; } .primary { grid-column:1/-1; } .weeks { grid-template-columns:1fr; } .settings-row,.modal-grid { grid-template-columns:1fr; } .settings-row label { align-items:flex-start; flex-direction:column; } .control-chip { box-sizing:border-box; width:100%; } }
+      @media(max-width:650px) { .summary { grid-template-columns:1fr 1fr; } .primary { grid-column:1/-1; } .weeks { grid-template-columns:1fr; } .settings-row,.modal-grid { grid-template-columns:1fr; } .settings-row { gap:10px; padding:12px; } .settings-row label { display:grid; grid-template-columns:minmax(92px,1fr) auto; align-items:center; gap:8px; } .settings-row label>span { min-width:0; line-height:1.2; } .control-chip { box-sizing:border-box; width:auto; max-width:188px; } .date-control { gap:4px; padding-left:7px; } .weekday { min-width:2.2em; font-size:.72rem; } .settings-row input[type="date"] { width:118px; padding-left:6px; } .theme-control { min-width:142px; } .settings-row select { width:108px; } }
     `;
   }
 }
