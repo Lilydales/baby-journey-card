@@ -350,9 +350,14 @@ class BabyJourneyCard extends HTMLElement {
       wrap.classList.toggle("theme-pink", option !== "Blue");
       this.setTheme(option);
     }));
-    this.shadowRoot.querySelectorAll(".gender-choice").forEach((button) => button.addEventListener("click", (event) =>
-      this.setGender(event.currentTarget.dataset.value)
-    ));
+    this.shadowRoot.querySelectorAll(".gender-choice").forEach((button) => button.addEventListener("click", (event) => {
+      const option = event.currentTarget.dataset.value;
+      const themeOption = { Boy: "Blue", Girl: "Pink", Unknown: "Auto" }[option];
+      const wrap = this.shadowRoot.querySelector(".wrap");
+      wrap.classList.toggle("theme-blue", themeOption === "Blue");
+      wrap.classList.toggle("theme-pink", themeOption !== "Blue");
+      this.setGender(option);
+    }));
     this.shadowRoot.querySelector(".date-control ha-icon").addEventListener("click", () => {
       const input = this.shadowRoot.querySelector("#lmp-date");
       if (typeof input.showPicker === "function") input.showPicker();
@@ -414,11 +419,12 @@ class BabyJourneyCard extends HTMLElement {
     });
   }
 
-  setGender(option) {
-    return this._hass.callService("input_select", "select_option", {
+  async setGender(option) {
+    await this._hass.callService("input_select", "select_option", {
       entity_id: this.config.gender_entity,
       option,
     });
+    return this.setTheme({ Boy: "Blue", Girl: "Pink", Unknown: "Auto" }[option]);
   }
 
   async loadAppointments(lmp, force = false) {
